@@ -1,0 +1,22 @@
+# Moral Panic 
+
+```{problem_description}
+Suppose that a researcher finds that high school students who listen to death metal music at least once per week are more likely to perform badly on standardized test. :metal: As a consequence, the researcher writes an opinion piece in which she recommends parents to keep their kids away from "dangerous, satanic music". 
+
+- Let the potential outcomes to control, $Y_i(0)$, be each students test score when listening to death metal at least one time per week. 
+- Let $Y_i(1)$ be the test score when listening to death metal less than one time per week. 
+```
+
+## Explain the statements
+Explain the statement $E[Y_i(0)|D_i=0] = E[Y_i(0)|D_i=1]$ in words. First, state the rote English language translation. Second, tell us the *meaning* of this statement. A full points solution will use the term "potential outcomes" twice. 
+
+**Answer:**
+1. The expected test score when students listen to death metal at least once per week ($Y_i(0)$), the potential outcome under control) is the same whether the students were actually in the group that listens to death metal at least once per week ($D_i=0$) or in the group that listens less than once per week ($D_i=1$).
+2.  The potential outcome for test scores under the "control" condition ($Y_i(0)$) is independent of treatment assignment ($D_i$). Students’ test scores in the absence of listening to death metal (their potential outcomes) would be the same, on average, regardless of whether they were in the "treatment" or "control" group. This independence is critical for unbiased estimation of causal effects because it ensures that treatment and control groups are comparable with respect to their potential outcomes.
+
+## Can you believe it
+Do you expect that this circumstance actually matches with the meaning that you've just written down? Why or why not?  
+
+**Answer:** 
+No, it is unlikely that this circumstance actually matches the meaning written above. The independence condition $E[Y_i(0)|D_i=0] = E[Y_i(0)|D_i=1]$. assumes there are no systematic differences between students who choose to listen to death metal frequently and those who do not. However, in reality, these groups likely differ in unobserved characteristics (e.g., personality, study habits, socioeconomic background) that influence both their music preferences and their test performance. Such differences would violate the independence assumption, leading to confounding and biased estimates of the treatment effect.
+

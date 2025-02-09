@@ -1,0 +1,80 @@
+---
+output:
+  pdf_document: default
+  html_document: default
+---
+# Power Analysis 
+
+```{problem_description}
+(Because there are a _lot_ of ways to write this code, we are not going to write a tight testing suite against this question.) 
+
+Understanding whether your experiment design and data collection strategy are able to reject the null hypothesis *when they should* is valuable! And, this is not a theoretical value. If your design and data collection cannot reject the null hypothesis, why even run the experiment in the first place?
+
+The classical formulation of power asks, "Given a test procedure and data, what proportion of the tests I *could conduct* would reject the null hypothesis?" 
+
+Imagine that you and David Reiley are going to revive the sports card experiment from the previous question. However, because it is for a class project, and because you have already spent all your money on a shiny new data science degree :raised_hands: :money_with_wings: , you are not going to be able to afford to recruit as many participants as before. 
+```
+
+## Describe your testing procedure
+Describe a t-test based testing procedure that you might conduct for this experiment. What is your null hypothesis, and what would it take for you to reject this null hypothesis? (This second statement could either be in terms of p-values, or critical values.)
+
+**Answer:** ...
+
+## Suppose you only had ten subjects, what would you learn
+Suppose that you are only able to recruit 10 people to be a part of your experiment -- 5 in treatment and another 5 in control. Simulate "re-conducting" the sports card experiment once by sampling from the data you previously collected, and conducting the test that you've written down in part 1 above. *Given the results of this 10 person simulation, would your test reject the null hypothesis?*
+
+```{r ten person sample, include=TRUE}
+# this should be a test object
+t_test_ten_people <- 'fill this in' 
+```
+
+**Answer:** ...
+
+## With only ten subjects, what is your power? 
+Repeat this process -- sampling 10 people from your existing data and conducting the appropriate test -- one-thousand times. Each time that you conduct this sample and test, pull the p-value from your t-test and store it in an object for later use. *Consider whether your sampling process should sample with or without replacement.*
+
+```{r many ten person samples, include=TRUE}
+# fill this in with the p-values from your power analysis
+t_test_p_values <- rep(NA, 1000) 
+
+## you can either write a for loop, use an apply method, or use replicate 
+## (which is an easy-of-use wrapper to an apply method)
+```
+
+**Answer:** ...
+
+## Visual analysis
+Use `ggplot` and either `geom_hist()` or `geom_density()` to produce a distribution of your p-values, and describe what you see. *What impression does this leave you with about the power of your test?* 
+
+```{r histogram of ten person samples, include=TRUE}
+
+```
+
+**Answer:** ...
+
+## Interpret your results, given your power
+Suppose that you and David were to actually run this experiment and design -- sample 10 people, conduct a t-test, and draw a conclusion. **And** suppose that when you get the data back, **lo and behold** it happens to reject the null hypothesis. Given the power that your design possesses, does the result seem reliable? Or, does it seem like it might be a false-positive result?
+
+```{r, include = TRUE}
+
+```
+
+**Answer:** ...
+
+## Conduct a power analysis 
+Apply the decision rule that you wrote down in part 1 above to each of the simulations you have conducted. What proportion of your simulations have rejected your null hypothesis? This is the power that this design and testing procedure generates. After you write and execute your code, include a narrative sentence or two about what you see.  
+
+```{r ten-person power, include=TRUE}
+t_test_rejects <- 'fill this in'
+```
+
+**Answer:** ...
+
+## Moar power! 
+Does buying more sample increase the power of your test? Apply the algorithm you have just written onto different sizes of data. Namely, conduct the exact same process that you have for 10 people, but now conduct the process for every 10% of recruitment size of the original data: Conduct a power analysis with a 10%, 20%, 30%, ... 200% sample of the original data. (You could be more granular if you like, perhaps running this task for every 1% of the data). 
+
+```{r, include=TRUE} 
+percentages_to_sample <- 'fill this in'
+```
+
+**Answer:** ...

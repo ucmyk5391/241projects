@@ -1,0 +1,17 @@
+# Potential Outcomes Notation 
+
+## Explain the notation $Y_i(1)$.  
+
+**Answer:** $Y_i(1)$ refers to the potential outcome for individual i if they receive the treatment (denoted by 1).
+
+## Explain the notation $Y_1(1)$.  
+
+**Answer:** $Y_1(1)$ is similar to $Y_i(1)$ but focuses on individual 1 specifically. It denotes the potential outcome that would occur for the first individual if they receive the treatment
+
+## Explain the notation $E[Y_i(1)|d_i=0]$.  
+
+**Answer:** represents the expected value of the potential outcome under treatment ($Y_1(1)$) for individuals who did not receive the treatment ($d_i$=0). This arises in cases where researchers use observational data and want to estimate the treatment effect for untreated individuals.
+
+## Explain the difference between the notation $E[Y_i(1)]$ and $E[Y_i(1)|d_i=1]$  
+
+**Answer:** $E[Y_i(1)]$ represents the expected value of the potential outcome under treatment across the entire population whereas $E[Y_i(1)|d_i=1]$ represents the expected value of the potential outcome under treatment, but only for individuals who actually received the treatment ($d_i$=1)
