@@ -1,0 +1,134 @@
+---
+title: "Power Analysis"
+name: "Alex, Micah, Scott, and David"
+date: "02/16/2025"
+output: 
+  pdf_document: 
+    number_sections: true
+    latex_engine: xelatex
+---
+```{r global options, include = FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
+
+knitr::knit_engines$set(problem_description = function(options) {
+  code <- paste(options$code, collapse = "\n")
+})
+```
+```{r}
+library(ggplot2) 
+
+set.seed(123)
+
+# Function to generate random user IDs
+generate_user_id <- function(n) {
+  replicate(n, paste0(sample(c(0:9, letters, LETTERS), 12, replace = TRUE), collapse = ""))
+}
+
+n <- 30000
+
+# Define baseline conversion rates and lifts
+baseline_rate <- 0.24  # 24% of users apply again in the same session
+effect_sizes <- c(0.10, 0.18, 0.25)  # 10%, 18%, and 25% increases
+
+# Dataframe to store power results
+power_results <- data.frame()
+
+# Nested loops for different effect sizes
+for (effect_size in effect_sizes) {
+  
+  # Create the dataframe for each scenario
+  df <- data.frame(
+    user_id = generate_user_id(n), 
+    test_group = sample(c("treatment", "control"), n, replace = TRUE),
+    applied = NA
+  )
+  
+  # Apply baseline conversion for the control group
+  df$applied[df$test_group == "control"] <- rbinom(sum(df$test_group == "control"), 1, baseline_rate)
+  
+  # Apply lift for the treatment group (baseline * (1 + effect_size))
+  df$applied[df$test_group == "treatment"] <- rbinom(sum(df$test_group == "treatment"), 1, baseline_rate * (1 + effect_size))
+  
+  # Initialize vector to store power by sample size
+  power_by_size <- numeric(length = length(seq(0.01, 1, by = 0.05)))
+  percentages_to_sample <- seq(0.01, 1, by = 0.05)  # Adjust granularity
+  
+  # Loop through different sample sizes
+  for (i in seq_along(percentages_to_sample)) {
+    sample_size <- floor(percentages_to_sample[i] * nrow(df))  # Actual sample size
+    
+    if (sample_size == 0) next  # Skip iteration if sample size is zero
+    
+    t_test_p_values <- rep(NA, 100)  # Store p-values
+    
+    for (j in 1:100) {
+      # Ensure treatment and control sample sizes are balanced
+      treatment_sample_size <- floor(sample_size / 2)
+      control_sample_size <- sample_size - treatment_sample_size
+      
+      # Sample treatment and control data
+      treatment_sample <- df[df$test_group == "treatment", ]
+      control_sample <- df[df$test_group == "control", ]
+      
+      treatment_sample <- treatment_sample[sample(1:nrow(treatment_sample), 
+                                                  size = min(treatment_sample_size, nrow(treatment_sample)), 
+                                                  replace = TRUE), ]
+      control_sample <- control_sample[sample(1:nrow(control_sample), 
+                                              size = min(control_sample_size, nrow(control_sample)), 
+                                              replace = TRUE), ]
+      
+      # Combine treatment and control samples
+      sampled_data <- rbind(treatment_sample, control_sample)
+      
+      # Perform t-test on the sampled data
+      t_test <- t.test(applied ~ test_group, data = sampled_data)
+      t_test_p_values[j] <- t_test$p.value
+    }
+    
+    # Calculate proportion of rejections (power) for this sample size
+    t_test_rejects <- t_test_p_values < 0.05
+    power_by_size[i] <- mean(t_test_rejects)
+  }
+  
+  # Store power results
+  power_results <- rbind(power_results, data.frame(
+    Sample_Size = percentages_to_sample * n, 
+    Power = power_by_size, 
+    Effect_Size = paste0(effect_size * 100, "%")
+  ))
+}
+
+# Plot power by sample size
+p <- ggplot(power_results, aes(x = Sample_Size, y = Power, color = Effect_Size)) +
+  geom_line(size = 1.2) +
+  geom_point(size = 2) +
+  labs(
+    title = "Power Analysis: Sample Size vs. Achieved Power",
+    x = "Sample Size",
+    y = "Power",
+    color = "Effect Size"
+  ) +
+  geom_hline(yintercept = 0.8, linetype = "dashed", color = "red") +
+  annotate("text", x = max(power_results$Sample_Size) * 0.7, y = 0.82, 
+           label = "80% Power Threshold", color = "red") +
+  theme_minimal()
+
+print(power_results)
+print(p)
+
+
+
+```
+
+
+
+Key takeaways:
+
+-   If we expect a small lift (~10%) in applications, we should aim for at least 10,800 job seekers in our experiment.
+
+-   If we expect a moderate lift (~18%), a sample size of 4,800 job seekers should be sufficient.
+
+-   If we anticipate a strong effect (~25%), we can obtain reliable results with just 1,800 job seekers.
+
+
+
